@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.hotel.users.service.UserServiceImpl;
 import com.hotel.users.service.UsersService;
 
 @Configuration
@@ -30,14 +29,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 	
 		http.csrf().disable();
-		http.authorizeRequests().antMatchers("/users/**").permitAll().and().addFilter(new AuthConfig());
+		http.authorizeRequests().antMatchers("/users/**").permitAll().and().addFilter(getAuthenticationFilter());
 		http.headers().frameOptions().disable();
 
 	}
 	
+
 	@SuppressWarnings("unused")
-	private AuthConfig getAuthenticationFilter() throws Exception {
-		AuthConfig authFilter = new AuthConfig();
+	private AuthenticationFilter getAuthenticationFilter() throws Exception {
+		AuthenticationFilter authFilter = new AuthenticationFilter(environment,usersService,authenticationManager());
+		authFilter.setFilterProcessesUrl("/userLogin");
 		authFilter.setAuthenticationManager(authenticationManager());
 		return authFilter;
 	}

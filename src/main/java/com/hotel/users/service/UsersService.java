@@ -9,5 +9,7 @@ public interface UsersService extends UserDetailsService{
 
 	
 	public UserDTO saveUser(UserBean user);
+	
+	public UserDTO loadUserByEmailId(String emailId);
 
 }
